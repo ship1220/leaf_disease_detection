@@ -26,3 +26,25 @@ class_names = [
 st.title("🌱 Plant Disease Detection")
 st.write("Upload a leaf image to check if it is healthy or diseased.")
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
+
+if uploaded_file is not None:
+    # Display uploaded image
+    image = Image.open(uploaded_file)
+    st.image(image, caption='Uploaded Leaf', use_column_width=True)
+    
+    # Preprocess image
+    img = image.resize((224, 224))  # assuming your model expects 224x224
+    img_array = np.array(img) / 255.0  # normalize
+    img_array = np.expand_dims(img_array, axis=0)  # add batch dimension
+
+    # Predict
+    predictions = model.predict(img_array)
+    predicted_index = np.argmax(predictions[0])
+    predicted_class = class_names[predicted_index]
+    confidence = predictions[0][predicted_index]
+
+    # Display results
+    if "healthy" in predicted_class.lower():
+        st.success(f"The plant is healthy! 🌿 (Confidence: {confidence:.2f})")
+    else:
+        st.error(f"The plant is diseased! ❌\nDisease: {predicted_class}\nConfidence: {confidence:.2f}")
