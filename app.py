@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import tensorflow as tf
 import numpy as np
+import random
 
 # Load model
 model = tf.keras.models.load_model("plant_disease_model.keras")
@@ -30,41 +31,65 @@ remedies = {
     "tomato_early_blight": {
         "natural": {
             "info": "Remove affected leaves and spray neem oil regularly. Maintain good air circulation between plants.",
-            "products": ["Neem Oil", "Compost Tea Spray", "Baking Soda Solution"]
+            "products": [
+                "Neem Oil", "Compost Tea Spray", "Baking Soda Solution",
+                "Garlic Spray", "Aloe Vera Extract", "Cinnamon Oil Spray"
+            ]
         },
         "pesticide": {
             "info": "Apply copper-based fungicides or chlorothalonil spray as per instructions.",
-            "products": ["Copper Oxychloride", "Chlorothalonil Fungicide", "Mancozeb"]
+            "products": [
+                "Copper Oxychloride", "Chlorothalonil Fungicide", "Mancozeb",
+                "Carbendazim", "Copper Hydroxide", "Azoxystrobin"
+            ]
         }
     },
     "potato_late_blight": {
         "natural": {
             "info": "Ensure proper spacing and sunlight exposure. Use garlic extract spray on affected areas.",
-            "products": ["Garlic Extract Spray", "Neem Oil"]
+            "products": [
+                "Garlic Extract Spray", "Neem Oil", "Turmeric Spray",
+                "Trichoderma Bio-fungicide", "Aloe Vera Extract"
+            ]
         },
         "pesticide": {
             "info": "Spray with metalaxyl or cymoxanil-based fungicides to control the spread.",
-            "products": ["Metalaxyl 8% + Mancozeb 64%", "Cymoxanil 8% + Mancozeb 64%"]
+            "products": [
+                "Metalaxyl 8% + Mancozeb 64%", "Cymoxanil 8% + Mancozeb 64%", 
+                "Dimethomorph", "Propamocarb", "Zineb"
+            ]
         }
     },
     "pepper_bell_bacterial_spot": {
         "natural": {
             "info": "Use copper-based organic sprays and avoid overhead watering.",
-            "products": ["Copper Soap Fungicide", "Neem Oil"]
+            "products": [
+                "Copper Soap Fungicide", "Neem Oil", "Compost Tea Spray",
+                "Garlic Extract", "Trichoderma Bio-fungicide"
+            ]
         },
         "pesticide": {
             "info": "Spray with copper hydroxide or streptomycin formulations.",
-            "products": ["Copper Hydroxide Spray", "Streptomycin Sulfate"]
+            "products": [
+                "Copper Hydroxide Spray", "Streptomycin Sulfate",
+                "Copper Oxychloride", "Kasugamycin", "Oxytetracycline"
+            ]
         }
     },
     "tomato_spider_mites_two_spotted_spider_mite": {
         "natural": {
             "info": "Spray with neem oil or insecticidal soap. Maintain humidity around plants.",
-            "products": ["Neem Oil", "Insecticidal Soap"]
+            "products": [
+                "Neem Oil", "Insecticidal Soap", "Clove Oil Spray",
+                "Rosemary Oil Spray", "Horticultural Oil"
+            ]
         },
         "pesticide": {
             "info": "Apply abamectin or spiromesifen-based miticides.",
-            "products": ["Abamectin 1.9% EC", "Spiromesifen 22.9% SC"]
+            "products": [
+                "Abamectin 1.9% EC", "Spiromesifen 22.9% SC", "Fenpyroximate",
+                "Bifenazate", "Hexythiazox"
+            ]
         }
     }
 }
@@ -89,9 +114,14 @@ if uploaded_file is not None:
 
     predictions = model.predict(img_array)
     predicted_index = np.argmax(predictions[0])
+
+    # Safe check for index error
+    if predicted_index >= len(class_names):
+        st.error(f"⚠️ Predicted index {predicted_index} out of range.")
+        st.stop()
+
     predicted_class = class_names[predicted_index]
     confidence = predictions[0][predicted_index]
-
     normalized_class = normalize_name(predicted_class)
 
     if "healthy" in predicted_class.lower():
@@ -106,7 +136,8 @@ if uploaded_file is not None:
                     st.subheader("Natural Remedy")
                     st.write(remedies[normalized_class]["natural"]["info"])
                     st.markdown("**Recommended Natural Products:**")
-                    for p in remedies[normalized_class]["natural"]["products"]:
+                    random_natural = random.sample(remedies[normalized_class]["natural"]["products"], k=3)
+                    for p in random_natural:
                         st.markdown(f"- 🔹 [{p} on Amazon](https://www.amazon.in/s?k={p.replace(' ', '+')})")
 
             with col2:
@@ -114,9 +145,6 @@ if uploaded_file is not None:
                     st.subheader("Pesticide Treatment")
                     st.write(remedies[normalized_class]["pesticide"]["info"])
                     st.markdown("**Suggested Pesticide Products:**")
-                    for p in remedies[normalized_class]["pesticide"]["products"]:
+                    random_pesticides = random.sample(remedies[normalized_class]["pesticide"]["products"], k=3)
+                    for p in random_pesticides:
                         st.markdown(f"- 💊 [{p} on Amazon](https://www.amazon.in/s?k={p.replace(' ', '+')})")
-
-        else:
-            st.info("No remedy information available for this disease yet. 🧪")
-
