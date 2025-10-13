@@ -1,11 +1,25 @@
+import gdown
+import os
+import tensorflow as tf
+
+# Google Drive file ID
+file_id = "1Uey-jGCgug5E-cbXStgWSVYRgw2VDDbk"
+output_path = "plant_disease_model.keras"
+
+# Download only if file does not exist locally
+if not os.path.exists(output_path):
+    url = f"https://drive.google.com/uc?id={file_id}"
+    gdown.download(url, output_path, quiet=False)
+
+# Load the model
+model = tf.keras.models.load_model(output_path)
+
 import streamlit as st
 from PIL import Image
 import tensorflow as tf
 import numpy as np
 import random
 
-# Load model
-model = tf.keras.models.load_model("plant_disease_model.keras")
 
 # Disease classes
 class_names = [
