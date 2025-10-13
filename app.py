@@ -10,7 +10,7 @@ import random
 # Download Model from Google Drive
 # -------------------------
 output_path = "plant_disease_model.keras"
-file_id = "15he9R7Eh8DiqITb5qkWfh-F6tx83uXR6"
+file_id = "19E5GXc8fUO-afXLLOLgtCYnox408k3_O"
 
 if not os.path.exists(output_path):
     url = f"https://drive.google.com/uc?export=download&id={file_id}"
