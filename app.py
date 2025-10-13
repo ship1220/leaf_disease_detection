@@ -25,9 +25,9 @@ class_names = [
     'Tomato_Spider_mites_Two_spotted_spider_mite'
 ]
 
-# Remedies dictionary
+# Remedies dictionary (keys simplified)
 remedies = {
-    "Tomato_Early_blight": {
+    "tomato_early_blight": {
         "natural": {
             "info": "Remove affected leaves and spray neem oil regularly. Maintain good air circulation between plants.",
             "products": ["Neem Oil", "Compost Tea Spray", "Baking Soda Solution"]
@@ -37,7 +37,7 @@ remedies = {
             "products": ["Copper Oxychloride", "Chlorothalonil Fungicide", "Mancozeb"]
         }
     },
-    "Potato_Late_blight": {
+    "potato_late_blight": {
         "natural": {
             "info": "Ensure proper spacing and sunlight exposure. Use garlic extract spray on affected areas.",
             "products": ["Garlic Extract Spray", "Neem Oil"]
@@ -47,7 +47,7 @@ remedies = {
             "products": ["Metalaxyl 8% + Mancozeb 64%", "Cymoxanil 8% + Mancozeb 64%"]
         }
     },
-    "Pepper__bell___Bacterial_spot": {
+    "pepper_bell_bacterial_spot": {
         "natural": {
             "info": "Use copper-based organic sprays and avoid overhead watering.",
             "products": ["Copper Soap Fungicide", "Neem Oil"]
@@ -57,7 +57,7 @@ remedies = {
             "products": ["Copper Hydroxide Spray", "Streptomycin Sulfate"]
         }
     },
-    "Tomato_Spider_mites_Two_spotted_spider_mite": {
+    "tomato_spider_mites_two_spotted_spider_mite": {
         "natural": {
             "info": "Spray with neem oil or insecticidal soap. Maintain humidity around plants.",
             "products": ["Neem Oil", "Insecticidal Soap"]
@@ -69,7 +69,11 @@ remedies = {
     }
 }
 
-# UI
+# Helper function to normalize class names
+def normalize_name(name):
+    return name.lower().replace("__", "_").replace("___", "_").replace(" ", "_")
+
+# Streamlit UI
 st.title("🌱 Plant Disease Detection")
 st.write("Upload a leaf image to check if it is healthy or diseased.")
 
@@ -88,27 +92,29 @@ if uploaded_file is not None:
     predicted_class = class_names[predicted_index]
     confidence = predictions[0][predicted_index]
 
+    normalized_class = normalize_name(predicted_class)
+
     if "healthy" in predicted_class.lower():
         st.success(f"The plant is healthy! 🌿 (Confidence: {confidence:.2f})")
     else:
         st.error(f"The plant is diseased! ❌\n**Disease:** {predicted_class}\n**Confidence:** {confidence:.2f}")
 
-        if predicted_class in remedies:
+        if normalized_class in remedies:
             col1, col2 = st.columns(2)
             with col1:
                 if st.button("🌿 Natural Remedy"):
                     st.subheader("Natural Remedy")
-                    st.write(remedies[predicted_class]["natural"]["info"])
+                    st.write(remedies[normalized_class]["natural"]["info"])
                     st.markdown("**Recommended Natural Products:**")
-                    for p in remedies[predicted_class]["natural"]["products"]:
+                    for p in remedies[normalized_class]["natural"]["products"]:
                         st.markdown(f"- 🔹 [{p} on Amazon](https://www.amazon.in/s?k={p.replace(' ', '+')})")
 
             with col2:
                 if st.button("🧴 Pesticide"):
                     st.subheader("Pesticide Treatment")
-                    st.write(remedies[predicted_class]["pesticide"]["info"])
+                    st.write(remedies[normalized_class]["pesticide"]["info"])
                     st.markdown("**Suggested Pesticide Products:**")
-                    for p in remedies[predicted_class]["pesticide"]["products"]:
+                    for p in remedies[normalized_class]["pesticide"]["products"]:
                         st.markdown(f"- 💊 [{p} on Amazon](https://www.amazon.in/s?k={p.replace(' ', '+')})")
 
         else:
