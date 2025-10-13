@@ -4,10 +4,10 @@ import tensorflow as tf
 import numpy as np
 import time
 
-# Load model
-model = tf.keras.models.load_model("plant_disease_model1.keras")
+# --- Load Model ---
+model = tf.keras.models.load_model("plant_disease_model.keras")
 
-# Class names
+# --- Class Names ---
 class_names = [
     'Pepper__bell___Bacterial_spot',
     'Pepper__bell___healthy',
@@ -26,7 +26,59 @@ class_names = [
     'Tomato_Spider_mites_Two_spotted_spider_mite'
 ]
 
-# Page setup
+# --- Remedies Dictionary ---
+disease_remedies = {
+    "Pepper__bell___Bacterial_spot": {
+        "pesticide": "Copper-based bactericides such as Copper Oxychloride.",
+        "natural": "Use neem oil spray and avoid overhead watering."
+    },
+    "Potato___Early_blight": {
+        "pesticide": "Mancozeb 75% WP or Chlorothalonil fungicide.",
+        "natural": "Apply compost tea or neem oil once a week."
+    },
+    "Potato___Late_blight": {
+        "pesticide": "Metalaxyl or Copper oxychloride fungicide.",
+        "natural": "Spray garlic extract and avoid excess humidity."
+    },
+    "Tomato_Target_Spot": {
+        "pesticide": "Chlorothalonil or mancozeb fungicide.",
+        "natural": "Prune lower leaves and use neem oil spray weekly."
+    },
+    "Tomato_Tomato_mosaic_virus": {
+        "pesticide": "No chemical control available.",
+        "natural": "Remove infected plants and disinfect tools regularly."
+    },
+    "Tomato_Tomato_YellowLeaf__Curl_Virus": {
+        "pesticide": "Use insecticides like Imidacloprid to control whiteflies.",
+        "natural": "Introduce natural predators (ladybugs) and remove weeds."
+    },
+    "Tomato_Bacterial_spot": {
+        "pesticide": "Copper-based bactericides every 7 days.",
+        "natural": "Apply baking soda and neem oil solution."
+    },
+    "Tomato_Early_blight": {
+        "pesticide": "Mancozeb 75% WP or Chlorothalonil fungicide.",
+        "natural": "Use compost tea or neem oil every 5–7 days."
+    },
+    "Tomato_Late_blight": {
+        "pesticide": "Copper oxychloride or Metalaxyl.",
+        "natural": "Remove infected leaves and use garlic spray weekly."
+    },
+    "Tomato_Leaf_Mold": {
+        "pesticide": "Chlorothalonil or mancozeb fungicide.",
+        "natural": "Improve ventilation and reduce leaf wetness."
+    },
+    "Tomato_Septoria_leaf_spot": {
+        "pesticide": "Mancozeb or Chlorothalonil every 10 days.",
+        "natural": "Use neem oil spray and crop rotation."
+    },
+    "Tomato_Spider_mites_Two_spotted_spider_mite": {
+        "pesticide": "Abamectin or Dicofol miticide.",
+        "natural": "Use neem oil or insecticidal soap solution."
+    }
+}
+
+# --- Page Setup ---
 st.set_page_config(page_title="Plant Disease Detector 🌱", page_icon="🌿", layout="centered")
 
 st.markdown(
@@ -42,12 +94,12 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Title and description
+# --- Title & Description ---
 st.title("🌿 Plant Disease Detection System")
-st.write("Upload a clear image of a plant leaf to detect if it's **healthy** or affected by a **disease**.")
+st.write("Upload a clear image of a plant leaf to detect if it's **healthy** or affected by a **disease**, and view possible remedies!")
 
-# File uploader
-uploaded_file = st.file_uploader("📸 Upload your image (JPG/PNG):", type=["jpg", "jpeg", "png"])
+# --- File Upload ---
+uploaded_file = st.file_uploader("📸 Upload your leaf image (JPG/PNG):", type=["jpg", "jpeg", "png"])
 
 if uploaded_file:
     image = Image.open(uploaded_file)
@@ -58,10 +110,11 @@ if uploaded_file:
 
     with col2:
         with st.spinner("Analyzing the image... 🔍"):
-            time.sleep(1)  # for visual feedback
+            time.sleep(1)  # Just for visual feedback
             img = image.resize((224, 224))
             img_array = np.array(img) / 255.0
             img_array = np.expand_dims(img_array, axis=0)
+
             predictions = model.predict(img_array)
             predicted_index = np.argmax(predictions[0])
             predicted_class = class_names[predicted_index]
@@ -76,7 +129,16 @@ if uploaded_file:
             st.warning(f"**Detected Disease:** {predicted_class.replace('_', ' ')}")
             st.progress(float(confidence))
 
-        # Optional: Show top 3 predictions
+            # --- Remedy Suggestions ---
+            remedy = disease_remedies.get(predicted_class, None)
+            if remedy:
+                st.subheader("🧴 Recommended Treatments")
+                st.write(f"**Pesticide Suggestion:** {remedy['pesticide']}")
+                st.write(f"**Natural Remedy:** {remedy['natural']}")
+            else:
+                st.info("No remedy information available for this disease yet.")
+
+        # --- Top 3 Predictions ---
         top3_idx = predictions[0].argsort()[-3:][::-1]
         st.write("### 🔝 Top 3 Predictions")
         for i in top3_idx:
@@ -84,15 +146,15 @@ if uploaded_file:
 
         st.info("💡 Tip: Ensure good lighting and clear focus for best results.")
 
-# Sidebar info
+# --- Sidebar Info ---
 st.sidebar.title("ℹ️ About")
 st.sidebar.markdown(
     """
     **Model:** CNN-based Plant Disease Detector  
     **Framework:** TensorFlow + Streamlit  
-    **Author:** Shipra 🌸  
+    **Created by:** Shipra 🌸  
     ---
     Upload images of **Pepper**, **Potato**, or **Tomato** leaves  
-    to detect diseases instantly!
+    to detect diseases and view remedies instantly!
     """
 )
