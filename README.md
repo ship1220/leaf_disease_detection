@@ -1,121 +1,65 @@
-🌿 Leaf Disease Detection using MobileNetV2
-🔍 Overview
+# 🌿 Leaf Disease Detection using MobileNetV2  
 
-This project uses deep learning and computer vision to automatically detect plant leaf diseases from images.
-Built using MobileNetV2, a lightweight yet powerful CNN architecture, the model classifies plant leaves into multiple disease categories and provides confidence scores for each prediction.
+## 🔍 Overview  
+This project applies **deep learning and computer vision** to detect plant leaf diseases from images.  
+Using **MobileNetV2**, a lightweight and efficient CNN architecture, the model classifies plant leaves into multiple disease categories and provides confidence scores for each prediction.  
 
-The system is deployed as a Streamlit web application, allowing users to upload leaf images and receive real-time classification results — helping farmers and researchers quickly identify crop diseases.
+The trained model is deployed through a **Streamlit web app**, allowing users to upload a leaf image and get real-time predictions — supporting early detection and sustainable agriculture.  
 
-🎯 Project Objective
+---
 
-Automate the process of plant disease detection using image recognition.
+## 🎯 Objective  
+- Automate plant leaf disease detection using deep learning.  
+- Achieve high classification accuracy with an efficient architecture.  
+- Provide a simple, accessible web interface for real-time use.  
 
-Achieve high accuracy while keeping the model lightweight for real-world deployment.
+---
 
-Provide an easy-to-use web interface for real-time predictions.
+## 🧠 Model Architecture  
 
-🧠 Model & Architecture
-Model Used: MobileNetV2 (Transfer Learning)
+### Model Used: **MobileNetV2 (Transfer Learning)**  
+- **Base Model:** MobileNetV2 pre-trained on ImageNet  
+- **Input Size:** 224 × 224 × 3  
+- **Unfrozen Layers:** Last 60 layers for fine-tuning  
+- **Added Layers:**  
+  - GlobalAveragePooling2D  
+  - Dense(128, activation='relu')  
+  - Dropout(0.5)  
+  - Dense(num_classes, activation='softmax')  
 
-Base Model: MobileNetV2 (pre-trained on ImageNet)
+**Optimizer:** Adam  
+**Loss Function:** Categorical Crossentropy  
+**Accuracy:** ~97% on PlantVillage dataset  
 
-Input Size: 224 × 224 × 3
+---
 
-Fine-tuned Layers: Last 60 layers unfrozen for task-specific learning
+## 📊 Dataset  
+- **Source:** [PlantVillage Dataset](https://www.kaggle.com/datasets/emmarex/plantdisease)  
+- **Images:** 50,000+ labeled leaf images (healthy & diseased)  
+- **Classes:** 14+ disease categories  
+- **Preprocessing:**  
+  - Image resizing to 224×224  
+  - Normalization to [0,1]  
+  - Data augmentation (rotation, zoom, flip)  
 
-Added Layers:
+---
 
-GlobalAveragePooling2D
+## ⚙️ Implementation Steps  
+1. **Data Loading:** Mounted dataset from Google Drive in Colab.  
+2. **Preprocessing:** Used `ImageDataGenerator` for normalization and augmentation.  
+3. **Model Building:** Loaded and customized MobileNetV2 using TensorFlow/Keras.  
+4. **Training:** Trained for 15 epochs using Colab GPU.  
+5. **Evaluation:** Analyzed accuracy, precision, recall, and confusion matrix.  
+6. **Deployment:** Integrated model into Streamlit for real-time prediction.  
 
-Dense(128, activation='relu')
+---
 
-Dropout(0.5)
+## 💻 Streamlit App  
+Upload a leaf image (`.jpg` / `.png`) to get:  
+- Predicted disease name 🌿  
+- Model confidence score 📈  
+- Health status indicator (✅ Healthy / ⚠️ Diseased)  
 
-Dense(num_classes, activation='softmax')
-
-Optimizer: Adam
-Loss Function: Categorical Crossentropy
-Accuracy Achieved: ~97% on PlantVillage dataset
-
-📊 Dataset
-
-Source: PlantVillage Dataset
-
-Size: 50,000+ labeled images of healthy and diseased plant leaves
-
-Categories: 14+ disease types across different plant species
-
-Preprocessing:
-
-Image resizing (224×224)
-
-Normalization (scaling pixel values to [0,1])
-
-Data augmentation (rotation, zoom, flipping)
-
-⚙️ Implementation Steps
-
-Data Loading – Mounted Google Drive and accessed dataset in Colab.
-
-Preprocessing – Resized and normalized images using ImageDataGenerator.
-
-Model Building – Loaded MobileNetV2, added dense layers, and compiled the model.
-
-Training – Conducted on Google Colab using GPU (15 epochs).
-
-Evaluation – Measured performance using accuracy, precision, recall, and confusion matrix.
-
-Deployment – Integrated trained model into a Streamlit web app for real-time prediction.
-
-💻 Streamlit App
-
-Upload a leaf image (.jpg/.png).
-
-The app displays:
-
-Predicted disease name 🌿
-
-Model confidence score 📈
-
-Visual feedback (Healthy ✅ / Diseased ⚠️).
-
-Run locally:
-
+**Run locally:**
+```bash
 streamlit run app.py
-
-🧰 Technologies Used
-
-Programming Language: Python
-
-Frameworks & Libraries: TensorFlow, Keras, NumPy, Pandas, Matplotlib, Streamlit
-
-Environment: Google Colab (GPU-accelerated)
-
-Dataset: PlantVillage
-
-📁 Repository Structure
-Leaf-Disease-Detection/
-│
-├── leaf_disease_model.keras       # Trained model file
-├── app.py                         # Streamlit web app
-├── dataset/                       # Dataset (PlantVillage or subset)
-├── requirements.txt               # Dependencies
-├── README.md                      # Project documentation
-└── utils/                         # Helper scripts (preprocessing, visualization)
-
-📈 Results
-Metric	Training	Validation
-Accuracy	98.2%	97.0%
-Loss	0.07	0.11
-
-Confusion matrix and class-wise accuracy plots confirmed consistent model performance across all disease categories.
-
-🚀 Future Enhancements
-
-Extend support for additional plant species.
-
-Integrate real-time detection via smartphone camera.
-
-Build an offline mobile version using TensorFlow Lite.
-
-Add disease-specific remedy recommendations.
