@@ -1,6 +1,6 @@
-# 🌿 Leaf Disease Detection using MobileNetV2  
+# Leaf Disease Detection using MobileNetV2  
 
-## 🔍 Overview  
+## Overview  
 This project applies **deep learning and computer vision** to detect plant leaf diseases from images.  
 Using **MobileNetV2**, a lightweight and efficient CNN architecture, the model classifies plant leaves into multiple disease categories and provides confidence scores for each prediction.  
 
@@ -8,14 +8,14 @@ The trained model is deployed through a **Streamlit web app**, allowing users to
 
 ---
 
-## 🎯 Objective  
+##  Objective  
 - Automate plant leaf disease detection using deep learning.  
 - Achieve high classification accuracy with an efficient architecture.  
 - Provide a simple, accessible web interface for real-time use.  
 
 ---
 
-## 🧠 Model Architecture  
+##  Model Architecture  
 
 ### Model Used: **MobileNetV2 (Transfer Learning)**  
 - **Base Model:** MobileNetV2 pre-trained on ImageNet  
@@ -33,7 +33,7 @@ The trained model is deployed through a **Streamlit web app**, allowing users to
 
 ---
 
-## 📊 Dataset  
+##  Dataset  
 - **Source:** [PlantVillage Dataset](https://www.kaggle.com/datasets/emmarex/plantdisease)  
 - **Images:** 50,000+ labeled leaf images (healthy & diseased)  
 - **Classes:** 14+ disease categories  
@@ -44,7 +44,7 @@ The trained model is deployed through a **Streamlit web app**, allowing users to
 
 ---
 
-## ⚙️ Implementation Steps  
+##  Implementation Steps  
 1. **Data Loading:** Mounted dataset from Google Drive in Colab.  
 2. **Preprocessing:** Used `ImageDataGenerator` for normalization and augmentation.  
 3. **Model Building:** Loaded and customized MobileNetV2 using TensorFlow/Keras.  
@@ -54,11 +54,11 @@ The trained model is deployed through a **Streamlit web app**, allowing users to
 
 ---
 
-## 💻 Streamlit App  
+## Streamlit App  
 Upload a leaf image (`.jpg` / `.png`) to get:  
-- Predicted disease name 🌿  
-- Model confidence score 📈  
-- Health status indicator (✅ Healthy / ⚠️ Diseased)  
+- Predicted disease name   
+- Model confidence score  
+- Health status indicator (Healthy / Diseased)  
 
 **Run locally:**
 ```bash
